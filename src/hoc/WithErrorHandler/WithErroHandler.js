@@ -46,7 +46,7 @@ const WithErrorHandler = (WrappedComponent, axios) => {
                     >
                         {this.state.error ? this.state.error : null}
                     </Modal>
-                    <WrappedComponent {...this.props} />;
+                    <WrappedComponent {...this.props} />
                 </Aux>
             );
         }
