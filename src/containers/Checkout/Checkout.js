@@ -33,6 +33,6 @@ class Checkout extends React.Component {
 
 const mapStateToProps = state => ({
     ingredients: state.ingredients,
-})
+});
 
 export default connect(mapStateToProps)(Checkout);
