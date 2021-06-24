@@ -5,21 +5,21 @@ export const purchaseBurgerSuccess = (id, orderData) => ({
     type: actionTypes.PURCHASE_BURGER_SUCCESS,
     orderId: id,
     data: orderData
-})
+});
 
 export const purchaseBurgerFail = (error) => ({
     type: actionTypes.PURCHASE_BURGER_FAIL,
     error: error
-})
+});
 
 export const purchaseBurgerStart = () => ({
     type: actionTypes.PURCHASE_BURGER_START
-})
+});
 
-export const purchaseBurger = (orderData) => {
+export const purchaseBurger = (orderData, token) => {
     return dispatch => {
         dispatch(purchaseBurgerStart());
-        axios.post('/orders.json', orderData)
+        axios.post('/orders.json?auth=' + token, orderData)
             .then(response => {
                 dispatch(purchaseBurgerSuccess(response.data.name, orderData))
             })
@@ -31,7 +31,7 @@ export const purchaseBurger = (orderData) => {
 
 export const purchaseInit = () => ({
     type: actionTypes.PURCHASE_INIT
-})
+});
 
 export const fetchOrdersSuccess = (orders) => ({
     type: actionTypes.FETCH_ORDERS_SUCCESS,
@@ -47,27 +47,23 @@ export const fetchOrdersFail = (error) => ({
     error: error
 });
 
-export const fetchOrders = () => {
+export const fetchOrders = (token, userId) => {
     return dispatch => {
         dispatch(fetchOrdersStart());
+        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
         axios
-            .get('/orders.json')
+            .get('/orders.json' + queryParams)
             .then((res) => {
                 const fetchedOrders = [];
                 const data = res.data;
                 for (let key in data) {
                     fetchedOrders.push({ id: key, ...data[key] });
                 }
-                console.log(fetchedOrders);
-                // this.setState({
-                //     orders: fetchedOrders,
-                //     loading: false,
-                // });
                 dispatch(fetchOrdersSuccess(fetchedOrders));
             })
             .catch((error) => {
                 // this.setState({ loading: false });
                 fetchOrdersFail(error);
             });
-    }
-}
+    };
+};

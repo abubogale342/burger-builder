@@ -6,6 +6,7 @@ const WithErrorHandler = (WrappedComponent, axios) => {
     return class extends React.Component {
         state = {
             error: null,
+            err: null
         };
 
         componentWillMount() {
@@ -21,6 +22,7 @@ const WithErrorHandler = (WrappedComponent, axios) => {
                 (err) => {
                     this.setState({
                         error: err.message,
+                        err: true
                     });
                 }
             );
@@ -46,7 +48,7 @@ const WithErrorHandler = (WrappedComponent, axios) => {
                     >
                         {this.state.error ? this.state.error : null}
                     </Modal>
-                    <WrappedComponent {...this.props} />
+                    <WrappedComponent {...this.props} error={this.state.err} />
                 </Aux>
             );
         }

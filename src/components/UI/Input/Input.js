@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './Input.module.css';
 
-const Input = ( props ) => {
+const Input = (props) => {
     let inputElement = null;
     const inputClasses = [classes.InputElement];
 
@@ -9,22 +9,23 @@ const Input = ( props ) => {
         inputClasses.push(classes.Invalid);
     }
 
-    switch ( props.elementType ) {
-        case ( 'input' ):
+    switch (props.elementType) {
+        case ('input'):
             inputElement = <input
                 className={inputClasses.join(' ')}
                 {...props.elementConfig}
                 value={props.value}
+                autoComplete="on"
                 onChange={props.changed} />;
             break;
-        case ( 'textarea' ):
+        case ('textarea'):
             inputElement = <textarea
                 className={inputClasses.join(' ')}
                 {...props.elementConfig}
                 value={props.value}
                 onChange={props.changed} />;
             break;
-        case ( 'select' ):
+        case ('select'):
             inputElement = (
                 <select
                     className={inputClasses.join(' ')}
@@ -52,7 +53,6 @@ const Input = ( props ) => {
             {inputElement}
         </div>
     );
-
 };
 
 export default Input;
