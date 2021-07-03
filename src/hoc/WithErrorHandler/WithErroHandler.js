@@ -1,58 +1,24 @@
-import React from 'react';
 import Modal from '../../components/UI/Modal/Modal';
+import React from 'react';
+import useHttpErrorHandler from '../../hooks/http-error-handler';
 import Aux from '../Aux/Aux';
 
 const WithErrorHandler = (WrappedComponent, axios) => {
-    return class extends React.Component {
-        state = {
-            error: null,
-            err: null
-        };
-
-        componentWillMount() {
-            this.reqInterceptor = axios.interceptors.request.use((req) => {
-                this.setState({
-                    error: null,
-                });
-                return req;
-            });
-
-            this.resInterceptor = axios.interceptors.response.use(
-                (res) => res,
-                (err) => {
-                    this.setState({
-                        error: err.message,
-                        err: true
-                    });
-                }
-            );
-        }
-
-        componentWillUnmount() {
-            axios.interceptors.request.eject(this.reqInterceptor);
-            axios.interceptors.response.eject(this.resInterceptor);
-        }
-
-        errorConfirmHandler = () => {
-            this.setState({
-                error: null,
-            });
-        };
-
-        render() {
-            return (
-                <Aux>
-                    <Modal
-                        show={this.state.error}
-                        modalClosed={this.errorConfirmHandler}
-                    >
-                        {this.state.error ? this.state.error : null}
-                    </Modal>
-                    <WrappedComponent {...this.props} error={this.state.err} />
-                </Aux>
-            );
-        }
-    };
+	const Wrapped = (props) => {
+		const [err, error, clearError] = useHttpErrorHandler(axios)
+		return (
+			<Aux>
+				<Modal
+					show={error}
+					modalClosed={clearError}
+				>
+					{error ? error : null}
+				</Modal>
+				<WrappedComponent {...props} error={err} />
+			</Aux>
+		);
+	}
+	return Wrapped;
 };
 
 export default WithErrorHandler;
